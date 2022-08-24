@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
+var Db *gorm.DB
 
 // 所有表都统一加入下面三个字段
 type Model struct {
@@ -35,7 +35,7 @@ func init() {
 	password = sec.Key("PASSWORD").String()
 	host = sec.Key("HOST").String()
 
-	db, err = gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	Db, err = gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		user,
 		password,
 		host,
@@ -45,9 +45,9 @@ func init() {
 		logging.Error(err)
 	}
 
-	sqlDB, err := db.DB()
+	sqlDB, err := Db.DB()
 
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
-	db.AutoMigrate(&User{}, &Test{})
+	Db.AutoMigrate(&User{}, &Test{}, &ShopSort{}, &ShopSubSort{})
 }

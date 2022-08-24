@@ -43,6 +43,34 @@ definitions:
     - captcha
     - mobile
     type: object
+  models.ShopSort:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      shopSubSort:
+        items:
+          $ref: '#/definitions/models.ShopSubSort'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  models.ShopSubSort:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      shopSortID:
+        type: integer
+      updated_at:
+        type: string
+    type: object
   models.User:
     properties:
       avatarUrl:
@@ -149,6 +177,158 @@ paths:
       summary: 获取省市区
       tags:
       - 获取省市区
+  /v1/sort:
+    get:
+      consumes:
+      - application/json
+      description: 获取分类详情
+      parameters:
+      - in: query
+        name: created_at
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: updated_at
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+      summary: 获取分类详情
+      tags:
+      - Sort
+    post:
+      consumes:
+      - application/json
+      description: 添加sort
+      parameters:
+      - description: shop_sort
+        in: body
+        name: shop_sort
+        required: true
+        schema:
+          $ref: '#/definitions/models.ShopSort'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+      summary: 添加sort
+      tags:
+      - Sort
+  /v1/sort/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除sort
+      parameters:
+      - description: ShopSort ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+      summary: 删除sort
+      tags:
+      - Sort
+    put:
+      consumes:
+      - application/json
+      description: 编辑Sort
+      parameters:
+      - description: ShopSort ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: shop_sort
+        in: body
+        name: shop_sort
+        required: true
+        schema:
+          $ref: '#/definitions/models.ShopSort'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+      summary: 编辑Sort
+      tags:
+      - Sort
+  /v1/sorts:
+    get:
+      consumes:
+      - application/json
+      description: 获取分类列表
+      parameters:
+      - in: query
+        name: created_at
+        type: string
+      - in: query
+        name: id
+        type: integer
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: updated_at
+        type: string
+      - in: query
+        name: page
+        required: true
+        type: integer
+      - in: query
+        name: pageSize
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+        "503":
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/controller.ResponseHTTP'
+      summary: 获取分类列表
+      tags:
+      - Sort
   /v1/upload:
     post:
       consumes:

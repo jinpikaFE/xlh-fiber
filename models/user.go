@@ -33,7 +33,7 @@ type Users struct {
 // GetArticleTotal gets the total number of articles based on the constraints
 func GetUserTotal(maps interface{}) (int64, error) {
 	var count int64
-	if err := db.Model(&User{}).Where(maps).Count(&count).Error; err != nil {
+	if err := Db.Model(&User{}).Where(maps).Count(&count).Error; err != nil {
 		return 0, err
 	}
 
@@ -42,7 +42,7 @@ func GetUserTotal(maps interface{}) (int64, error) {
 
 func GetUsers(pageNum int, pageSize int, maps interface{}) ([]*Users, error) {
 	var users []*Users
-	err := db.Preload(clause.Associations).Where(maps).Offset(pageNum).Limit(pageSize).Find(&users).Error
+	err := Db.Preload(clause.Associations).Where(maps).Offset(pageNum).Limit(pageSize).Find(&users).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func GetUsers(pageNum int, pageSize int, maps interface{}) ([]*Users, error) {
 
 func GetUser(maps interface{}) (*User, error) {
 	var user User
-	err := db.Preload(clause.Associations).Where(maps).Find(&user).Error
+	err := Db.Preload(clause.Associations).Where(maps).Find(&user).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
@@ -60,8 +60,8 @@ func GetUser(maps interface{}) (*User, error) {
 
 func AddUser(user User) error {
 	// 开始事务
-	tx := db.Begin()
-	if err := db.Create(&user).Error; err != nil {
+	tx := Db.Begin()
+	if err := Db.Create(&user).Error; err != nil {
 		// 遇到错误时回滚事务
 		tx.Rollback()
 		return err
@@ -73,8 +73,8 @@ func AddUser(user User) error {
 
 func EditUser(id int, data User) error {
 	// 开始事务
-	tx := db.Begin()
-	if err := db.Model(&User{}).Where("id = ?", id).Updates(data).Error; err != nil {
+	tx := Db.Begin()
+	if err := Db.Model(&User{}).Where("id = ?", id).Updates(data).Error; err != nil {
 		// 遇到错误时回滚事务
 		tx.Rollback()
 		return err
@@ -85,7 +85,7 @@ func EditUser(id int, data User) error {
 }
 
 func DeleteUser(id int) error {
-	if err := db.Where("id = ?", id).Delete(User{}).Error; err != nil {
+	if err := Db.Where("id = ?", id).Delete(User{}).Error; err != nil {
 		return err
 	}
 
@@ -95,7 +95,7 @@ func DeleteUser(id int) error {
 // 根据id判断test 对象是否存在
 func ExistUserByID(id int) bool {
 	var user User
-	db.Select("id").Where("id = ?", id).First(&user)
+	Db.Select("id").Where("id = ?", id).First(&user)
 
 	return user.ID > 0
 }

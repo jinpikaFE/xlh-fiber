@@ -99,6 +99,14 @@ func InitRouter() *fiber.App {
 	}
 
 	{
+		apiv1.Get("/sorts", controller.GetSorts)
+		apiv1.Get("/sort", controller.GetSort)
+		apiv1.Post("/sort", controller.AddSort)
+		apiv1.Put("/sort/:id", controller.EditSort)
+		apiv1.Delete("/sort/:id", controller.DelSort)
+	}
+
+	{
 		apiv1.Post("/upload", controller.Upload)
 	}
 
